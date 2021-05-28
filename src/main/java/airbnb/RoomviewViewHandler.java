@@ -196,7 +196,7 @@ public class RoomviewViewHandler {
     // 방이 취소 되었을 때 Update -> RoomView TABLE
     //////////////////////////////////////////////////
     @StreamListener(KafkaProcessor.INPUT)
-    public void whenRoomCancelled_then_UPDATE_6(@Payload RoomCancelled roomCancelled) {
+    public void whenRoomCancelled_then_UPDATE_7(@Payload RoomCancelled roomCancelled) {
     
         try {
             if (!roomCancelled.validate()) return;
@@ -218,13 +218,67 @@ public class RoomviewViewHandler {
     }
 
     //////////////////////////////////////////////////
+    // 렌터카가 예약 되었을 때 
+    //////////////////////////////////////////////////
+    @StreamListener(KafkaProcessor.INPUT)
+    public void whenCarReserved_then_UPDATE_8(@Payload CarReserved carReserved) {
+    
+        try {
+            if (!carReserved.validate()) return;
+    
+            System.out.println("#######################");
+            System.out.println("###RENTCAR RESERVED ###" + carReserved.getRoomId());
+            System.out.println("#######################");
+
+            Optional<Roomview> roomviewOptional = roomviewRepository.findById(carReserved.getRoomId());
+            if( roomviewOptional.isPresent()) {
+                Roomview roomview = roomviewOptional.get();
+                roomview.setCarId(carReserved.getCarId());
+                roomview.setCarStatus(carReserved.getStatus());
+                roomview.setCarName(carReserved.getCarName());
+                roomviewRepository.save(roomview);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //////////////////////////////////////////////////
+    // 렌터카가 취소 되었을 때 
+    //////////////////////////////////////////////////
+    @StreamListener(KafkaProcessor.INPUT)
+    public void whenCarCancelled_then_UPDATE_9(@Payload CarCancelled carCancelled) {
+    
+        try {
+            if (!carCancelled.validate()) return;
+    
+            System.out.println("#######################");
+            System.out.println("###RENTCAR CANCELLED ###" + carCancelled.getRoomId());
+            System.out.println("#######################");
+
+            Optional<Roomview> roomviewOptional = roomviewRepository.findById(carCancelled.getRoomId());
+            if( roomviewOptional.isPresent()) {
+                Roomview roomview = roomviewOptional.get();
+                roomview.setCarId(carCancelled.getCarId());
+                roomview.setCarStatus(carCancelled.getStatus());
+                roomview.setCarName(carCancelled.getCarName());
+                roomviewRepository.save(roomview);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //////////////////////////////////////////////////
     // 방이 삭제 되었을 때 Delete -> RoomView TABLE
     //////////////////////////////////////////////////
     @StreamListener(KafkaProcessor.INPUT)
     public void whenRoomDeleted_then_DELETE_1(@Payload RoomDeleted roomDeleted) {
         try {
             if (!roomDeleted.validate()) return;
-            // view 레파지 토리에 삭제 쿼리
+            // view 레파지토리에 삭제 쿼리
             roomviewRepository.deleteById(roomDeleted.getRoomId());
         }catch (Exception e){
             e.printStackTrace();

@@ -16,6 +16,9 @@ public class Roomview {
         private String rsvStatus;
         private Long payId;
         private String payStatus;
+        private Long carId;
+        private String carName;
+        private String carStatus;
 
 
         public Long getRoomId() {
@@ -82,4 +85,29 @@ public class Roomview {
             this.payStatus = payStatus;
         }
 
+        public Long getCarId() {
+            return carId;
+        }
+
+        public void setCarId(Long carId) {
+            this.carId = carId;
+        }
+
+        public String getCarName() {
+            return carName;
+        }
+
+        public void setCarName(String carName) {
+            this.carName = carName;
+        }
+
+        public String getCarStatus() {
+            return carStatus;
+        }
+
+        public void setCarStatus(String carStatus) {
+            this.carStatus = carStatus;
+        }
+
+        
 }
